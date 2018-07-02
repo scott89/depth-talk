@@ -41,6 +41,239 @@
 			<!-- Any section element inside of this container is displayed as a slide -->
 			<div class="slides">
 				<section>
+					<br><br>
+					<h2 style="text-transform: none">Depth Estimation and Application</h2>
+					<br><br>
+					<p>Lijun Wang</p>
+					<p>July 1, 2018</p>
+				</section>
+				<section data-transition="zoom">
+					<h2 style="text-transform: none">Topics</h2>
+					<br>
+					<ul>
+						<li class="fragment"> Architecture </li>
+						<li class="fragment"> Loss Function </li>
+						<li class="fragment"> Training Strategy </li>
+						<li class="fragment"> Application on RGB-D </li>
+					</ul>	
+				</section>
+				<section>
+					<section>
+						<h4 style="text-transform: none"><a href="https://cs.nyu.edu/~deigen/depth/">Depth Map Prediction from a Single Image using a Multi-Scale Deep Network</a></h4>
+						<p>By Eigen et al., NIPS 20114</p>
+						<img width=90% data-src="fig/eigen.png">
+					</section>
+					<section>
+						<h4 style="text-transform: none">Depth Map Prediction from a Single Image using a Multi-Scale Deep Network</h4>
+						<ul>
+							<li class="fragment">Much of the error is explained by how well the mean depth is predicted</li>
+							<li class="fragment"><span style="color: red">20%</span> relative improvement</li>
+							<li class="fragment">Scale invariant loss: 
+								<br><br>
+								$D(y,y^{*}) = \sum \limits_{i,j} [(\log y_i - \log y_j) - (\log y^*_i - \log y^*_j)]^2$</li>
+						</ul>
+					</section>
+				</section>
+				<section>
+					<section>
+						<h4 style="text-transform: none"><a href="https://cs.nyu.edu/~deigen/dnl/">One Multi-Scale Architecture for Multi-Task</a></h4>
+						<div class="left" style="float: left; width: 50%">
+							<img width=100% data-src="fig/eigen2.png">
+						</div>
+						<div class="right" style="float: right; width: 50%">
+							<div style="position: absolute; top: 20%">
+								<small style="text-align: justify">[1] Eigen et al, Predicting Depth, Surface Normals and Semantic Labels with a Common Multi-Scale Convolutional Architecture, ICCV 2015	</small>				
+								<br> <br> <br>
+								<ul>
+									<li class="fragment">Multi-scale architecture</li>
+									<li class="fragment">Solve multiple tasks</li>
+									<li class="fragment">Scale-invariant loss + Gradient loss</li>
+								</ul>
+							</div>
+						</div>
+					</section>
+				</section>
+				<section>
+						<section>
+							<h4 style="text-transform: none">Deeper Depth Prediction with Fully Convolutional Residual Networks</h4>
+							<small>By Laina et al, IEEE International Conference on 3D Vision 2016</small>
+							<img width=100% data-src="fig/laina1.png">
+						</section>
+						<section>
+							<h4 style="text-transform: none"> Faster Up-Convolution</h4>
+							<img width=100% data-src="fig/laina2.png">
+						</section>
+						<section>
+								<h4 style="text-transform: none"> Faster Up-Convolution</h4>
+								<img width=80% data-src="fig/laina3.png">
+						</section>
+					</section>
+				<section>
+					<section>
+						<h3 style="text-transform: none">A Two-Stream Network for Depth Estimation</h3>
+						<img width=100% data-src="fig/two_stream.png">
+						<small>[2] Li et al, A Two-Streamed Network for Estimating Fine-Scaled Depth Maps from Single RGB Images, ICCV 2017</small>
+					</section>
+					<section>
+						<h3 style="text-transform: none">A Two-Stream Network for Depth Estimation</h3>
+						<ul>
+							<li class="fragment">Set Loss</li>
+							<p class="fragment">$L_{\textrm{single}} + \Omega_{\textrm{set}}$</p>
+							<li class="fragment">Fusing Depth and Depth Gradient</li>
+							<ul>
+								<li class="fragment">End-to-end as refinement</li>
+								<li class="fragment">Optimization</li>
+								<p class="fragment">$D^* = \arg \min \limits_{D} \sum \limits _{p=1}^{N} \phi (D^p - D^p_{est}) \\ + 
+									\alpha \sum \limits_{p=1}^{N} [\phi (\nabla_x D^p - G_x^p) + \phi (\nabla_y D^p - G_y^p)]$</p>
+							</ul>
+						</ul>
+					</section>
+				</section>
+				<section>
+					<section>
+						<div style="position: relative; top: 300px">
+							<h3 style="text-transform: none">How about training data?</h3>
+						</div>
+					</section>
+					<section> 
+						<h4 style="text-transform: none">Existing Depth Data Set</h4>
+						<table style="top: 200px">
+							<thead>
+								<tr>
+									<th>DataSet</th>
+									<th>Statics</th>
+									<th>Anotation</th>
+									<th>Scene</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td><font size="6">
+										<a href="https://cs.nyu.edu/~silberman/datasets/nyu_depth_v2.html">NYUD-v2</a></font></td>
+									<td><font size="6">1449 + 407K raw</font></td>
+									<td><font size="6">Depth + Segmentation</font></td>
+									<td><font size="6">Indoor</font></td>
+								</tr>
+								<tr>
+									<td><font size="6">
+										<a href="http://www.cvlibs.net/datasets/kitti/eval_depth.php?benchmark=depth_prediction">KITTI</a>
+									</font></td>
+									<td><font size="6">94k frames</font></td>
+									<td><font size="6">Depth aligned with raw data</font></td>
+									<td><font size="6">Street</font></td>
+								</tr>
+								<tr>
+									<td><font size="6">										
+										<a href="http://make3d.cs.cornell.edu/data.html">Make3D</a>
+									</font></td>
+									<td><font size="6">500 low-resolution</font></td>
+									<td><font size="6">Depth</font></td>
+									<td><font size="6">Outdoor</font></td>
+								</tr>
+								<tr>
+									<td><font size="5">										
+										<a href="http://rgbd.cs.princeton.edu/">SUNRGB-D</a>
+									</font></td>
+									<td><font size="6">10k</font></td>
+									<td><font size="6">Depth, Segmentation, 3D bounding box</font></td>
+									<td><font size="6">Indoor</font></td>
+								</tr>	
+							</tbody>
+						</table>
+					</section>
+					<section data-transition="concave">
+						<h4 style="text-transform: none">Drawbacks of Exising Data Sets</h4>
+						<ul>
+							<li>Very limited in terms of scene variety</li>
+							<li>Trained models struggle to generalize across scenes </li>
+						</ul>
+							<img width="90%" data-src="fig/mega1.png">
+					</section>
+				</section>
+				<section>
+					<h3 style="text-transform: none">Solution</h3>
+					<br>
+					<p style="text-align: left">Different training strategies:</p>
+					<ul>
+						<li class="fragment">Weakly supervised training</li>
+						<li class="fragment">Unsupervised training</li>
+						<li class="fragment">Semi-supervised training</li>
+						<li class="fragment">Multi-task training</li>
+					</ul>
+				</section>
+				<section>
+					<section>
+						<h3 style="text-transform: none"><a href="http://www-personal.umich.edu/~wfchen/depth-in-the-wild/">Single-Image Depth Perception in the Wild</a></h3>
+						<p> By Chen et al, NIPS 2016 </p>
+						<img width="90%" data-src="fig/dpw1.png">
+					</section>
+					<section>
+						<h3 style="text-transform: none">Motivation</h3>
+						<p style="position: relative; top: 100px">Increase scene diversity with interenet images.</p>
+						<img width="100%" data-src="fig/dpw2.png" style="position: relative; top: 150px">
+					</section>
+					<section>
+						<h3 style="text-transform: none">Challenge: How to Acquire Depth</h3>
+						<br><br>
+						<p> Humans are better at judging relative depth:</p> 
+						<p class="fragment">“Is point A closer than point B?”</p>
+						<p class="fragment">A relative depth data set</p>
+					</section>
+					<section>
+						<h3 style="text-transform: none">Data Collection</h3>
+						<br>
+						<br>
+						<ul>
+							<li class="fragment">Gather 0.5M images from Flickr</li>
+							<li class="fragment">Anotate relative depth for one pair of points per image</li>
+							<img width="90%" data-src="fig/dpw3.png" class="fragment">
+						</ul>
+					</section>
+					<section>
+						<h3 style="text-transform: none">Learning with Relative Depth</h3>
+						<p style="text-align: left">Ranking Loss:</p>
+						<p>$L(I,R,z)=\sum \limits_k \psi(I, i_k, j_k, r, z)$</p>
+						<p style="text-align: left">where the loss for the $k$-th quiry:</p>
+						<p>$\psi(I, i_k, j_k, r, z) =  \begin{cases} \log (1+\exp (-z_{i_k} + z_{j_k})), & \mbox{if } r_k=+1\\  
+							\log (1+\exp (z_{i_k} - z_{j_k})), & \mbox{if } r_k=-1 \\
+							(z_{i_k} - z_{j_k})^2, & \mbox{if } r_k=0 \end{cases}$</p>
+					</section>
+					<section>
+						<img width="90%" data-src="fig/dpw4.png">
+					</section>
+				</section>
+				<section>
+					<section>
+						<h3 style="text-transform: none">Generate GT Depth from Multi-view Internet Images</h3>
+						<small>[3] MegaDepth: Learning Single-View Depth Prediction from Internet Photos, CVPR 2018, <a href="http://www.cs.cornell.edu/
+							projects/megadepth/">WebPage</a></small>
+						<ul>
+							<li class="fragment">Landmark10k data sets with multi-view photos for each landmark</li>
+							<li class="fragment">Build 3D model for each collection with SfM</li>
+							<li class="fragment">Depth Reconstruction with MVS</li>
+							<img class="fragment" width=100% data-src="fig/mega2.png">
+						</ul>
+					</section>
+					<section>
+						<h3 style="text-transform: none">Data Categorization: Euclidean vs. Ordinal Depth </h3>
+						<p class="fragment">If $\ge 30\%$ valid depth &#8658 Euclidean loss</p>
+						<p class="fragment">Otherwise &#8658 ordinal loss</p>
+						<div class="fragment">
+							<img width=100% data-src="fig/mega3.png">
+							<p>Determine foreground with semantic info</p>
+						</div>
+					</section>
+					<section>
+						<h3 style="text-transform: none"> Loss Function </h3>
+						$L = L_{\mbox{data}} + \alpha L_{\mbox{grad}} + \beta L_{\mbox{ord}}$ 
+						<p class="fragment">$L_{\mbox{grad}}=\frac{1}{n} \sum \limits_k \sum \limits_i 
+							(|\nabla_x R_i^k + \nabla_y R_i^k|)$</p>
+							<img class="fragment" width=70% data-src="fig/mega4.png">
+					</section>
+				</section>
+
+
+				<section>
 					<h1>Reveal.js</h1>
 					<h3>The HTML Presentation Framework</h3>
 					<p>
@@ -390,7 +623,7 @@ Reveal.addEventListener( 'customevent', function() {
 				controls: true,
 				progress: true,
 				history: true,
-				center: true,
+				center: false,
 
 				transition: 'slide', // none/fade/slide/convex/concave/zoom
 
@@ -401,7 +634,8 @@ Reveal.addEventListener( 'customevent', function() {
 					{ src: 'plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
 					{ src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
 					{ src: 'plugin/zoom-js/zoom.js', async: true },
-					{ src: 'plugin/notes/notes.js', async: true }
+					{ src: 'plugin/notes/notes.js', async: true },
+					{ src: 'plugin/math/math.js', async: true}
 				]
 			});
 
